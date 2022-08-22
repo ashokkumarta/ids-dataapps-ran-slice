@@ -24,7 +24,7 @@
           }
         },
         "tags": [
-          "ids-data-app-sample"
+          "ids-data-app-ran-slice"
         ]
       }
     },
@@ -67,7 +67,7 @@
           }
         ],
         "tags": [
-          "ids-data-app-sample"
+          "ids-data-app-ran-slice"
         ]
       },
       "get": {
@@ -85,7 +85,7 @@
           }
         },
         "tags": [
-          "ids-data-app-sample"
+          "ids-data-app-ran-slice"
         ]
       },
       "put": {
@@ -126,7 +126,7 @@
           }
         ],
         "tags": [
-          "ids-data-app-sample"
+          "ids-data-app-ran-slice"
         ]
       }
     }

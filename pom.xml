@@ -10,10 +10,10 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ashok.ids.dataapps</groupId>
-	<artifactId>ids-dataapps-sample</artifactId>
+	<artifactId>ids-dataapps-ran-slice</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>IDS Data-Apps Sample</name>
-	<description>A sample data app for IDS PoC</description>
+	<name>IDS Data-Apps ran-slice</name>
+	<description>A ran-slice data app for IDS PoC</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>

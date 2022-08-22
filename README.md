@@ -1,4 +1,4 @@
-# ids-dataapps-sample
+# ids-dataapps-ran-slice
 A generic data app for IDS PoC which can be configured as a provider, consumer or processor
 
 ## application.properties configuration

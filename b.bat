@@ -1,8 +1,8 @@
 call mvnw clean package
 call docker container prune
-call docker image rm ashokkumarta/dataapps-sample:latest
-call docker build -t ashokkumarta/dataapps-sample:latest .
-call docker push ashokkumarta/dataapps-sample:latest
+call docker image rm ashokkumarta/dataapps-ran-slice:latest
+call docker build -t ashokkumarta/dataapps-ran-slice:latest .
+call docker push ashokkumarta/dataapps-ran-slice:latest
 
 #call cd ..\ids-test-dataapps\test-provider
 #call docker image rm ashokkumarta/test_provider:latest

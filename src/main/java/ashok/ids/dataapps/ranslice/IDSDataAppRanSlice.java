@@ -1,4 +1,4 @@
-package ashok.ids.dataapps.sample;
+package ashok.ids.dataapps.ranslice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,7 +28,7 @@ import org.json.JSONObject;
 
 @SpringBootApplication
 @RestController
-public class IDSDataAppSample extends CommonBase {
+public class IDSDataAppRanSlice extends CommonBase {
 
 	@Value("${app.name}")
 	private String appName;
@@ -79,7 +79,21 @@ public class IDSDataAppSample extends CommonBase {
 	
 	@Value("${action}")
 	private String action;
-	
+
+	@Value("${label.AllotmentConfirmation}")
+	private String AllotmentConfirmation;
+
+	@Value("${label.TrackingAreaId}")
+	private String TrackingAreaId;
+
+	@Value("${label.CellNumber}")
+	private String CellNumber;
+
+	@Value("${label.RRMPolicyType}")
+	private String RRMPolicyType;
+
+	@Value("${label.Cost}")
+	private String Cost;
 	
 	private static final String APP_NAME = "\\$app.name";
 	private static final String APP_TYPE = "\\$app.type";
@@ -95,25 +109,25 @@ public class IDSDataAppSample extends CommonBase {
 
 	private static final String APP_PIPELINE_PARAM = "_PROCESSED_THROUGH_";
 
-	private static final String DATA_OPERATOR = "\\$data.operator";
-	private static final String DATA_TOWER_OPERATOR = "\\$data.tower.operator";
-	private static final String DATA_TOWER_CAPACITY = "\\$data.tower.capacity";
-	private static final String DATA_RAN_NUMBER = "\\$data.ran.number";
-	private static final String DATA_CELL_NUMBER = "\\$data.cell.number";
-	private static final String DATA_CELL_CAPACITY = "\\$data.cell.capacity";
-	private static final String DATA_DATA_VOLUME = "\\$data.data.volume";
-	private static final String DATA_PEE_MEASUREMENT = "\\$data.pee.measurement";
-	private static final String DATA_UTILIZATION = "\\$data.utilization";
-	private static final String DATA_PACKET_DELAY = "\\$data.packet.delay";
-	private static final String DATA_RAN_INITIATED_PAGING = "\\$data.ran.initiated.paging";
-	private static final String DATA_NO_OF_CALLS_RECEIVED = "\\$data.number.of.calls.received";
-	private static final String DATA_SUCCESSFUL_CALLS = "\\$data.successful.calls";
-	private static final String DATA_NETWORK_SLICE_SELECTION = "\\$data.network.slice.selection";
-	private static final String DATA_ENERGY_SAVING_STATE = "\\$data.energy.saving.state";
-	private static final String DATA_ENERGY_SAVING_RECOMMENDATION = "\\$data.energy.saving.recommendation";
-	private static final String DATA_ENERGY_SAVING_RECOMMENDATION_RESPONSE = "\\$data.energy.saving.recommendation.response";
-	private static final String DATA_ENERGY_SAVING_RECOMMENDATION_INCENTIVE = "\\$data.energy.saving.recommendation.incentive";
-	private static final String DATA_TIME_INTERVEL = "\\$data.time.interval";
+
+	// For RAN Slicing
+	private static final String DATA_CustomerId = "\\$data.CustomerId";
+	private static final String DATA_AccountNumber = "\\$data.AccountNumber";
+	private static final String DATA_SubscriberId = "\\$data.SubscriberId";
+	private static final String DATA_CustomerType = "\\$data.CustomerType";
+	private static final String DATA_UserEquipmentId = "\\$data.UserEquipmentId";
+	private static final String DATA_UserEquipmentType = "\\$data.UserEquipmentType";
+	private static final String DATA_TenentType = "\\$data.TenentType";
+	private static final String DATA_RequiredSliceType = "\\$data.RequiredSliceType";
+	private static final String DATA_RequiredStartDate = "\\$data.RequiredStartDate";
+	private static final String DATA_RequiredEndDate = "\\$data.RequiredEndDate";
+	private static final String DATA_RequiredStartTime = "\\$data.RequiredStartTime";
+	private static final String DATA_RequiredEndTime = "\\$data.RequiredEndTime";
+	private static final String DATA_RequiredPerformanceLevel = "\\$data.RequiredPerformanceLevel";
+	private static final String DATA_RequiredReliabilityLevel = "\\$data.RequiredReliabilityLevel";
+	private static final String DATA_RequiredBandwidth = "\\$data.RequiredBandwidth";
+
+
 	
 	private static final String USER_ID = "\\$user_id";
 	private static final String OBJECT_ID = "\\$object_id";
@@ -210,8 +224,15 @@ public class IDSDataAppSample extends CommonBase {
 		logger.debug("With message: {}", input);
 
 		logger.debug("Processing...");
-		ResponseEntity<String> response = ok(input);
-		;
+		JSONObject inputJson = new JSONObject(input);
+
+		inputJson.put(AllotmentConfirmation, dataGenerator.getAllotmentConfirmation());
+		inputJson.put(TrackingAreaId, dataGenerator.getTrackingAreaId());
+		inputJson.put(CellNumber, dataGenerator.getCellNumber());
+		inputJson.put(RRMPolicyType, dataGenerator.getRRMPolicyType());
+		inputJson.put(Cost, dataGenerator.getCost());
+
+		ResponseEntity<String> response = ok(inputJson.toString());
 		logger.debug("Completed processing.");
 
 		logger.debug("Response: {}", response);
@@ -251,34 +272,24 @@ public class IDSDataAppSample extends CommonBase {
 		parsedMsg = parse(parsedMsg, ACTIVITY_TYPE, activity_type);
 		parsedMsg = parse(parsedMsg, ACTION, action);
 
-		parsedMsg = parse(parsedMsg, DATA_OPERATOR, dataGenerator.getOperator());
-		parsedMsg = parse(parsedMsg, DATA_TOWER_OPERATOR, dataGenerator.getTowerOperator());
-		parsedMsg = parse(parsedMsg, DATA_TOWER_CAPACITY, dataGenerator.getTowerCapacity());
+		parsedMsg = parse(parsedMsg, DATA_CustomerId, dataGenerator.getCustomerId());
+		parsedMsg = parse(parsedMsg, DATA_AccountNumber, dataGenerator.getAccountNumber());
+		parsedMsg = parse(parsedMsg, DATA_SubscriberId, dataGenerator.getSubscriberId());
+		parsedMsg = parse(parsedMsg, DATA_CustomerType, dataGenerator.getCustomerType());
+		parsedMsg = parse(parsedMsg, DATA_UserEquipmentId, dataGenerator.getUserEquipmentId());
+		parsedMsg = parse(parsedMsg, DATA_UserEquipmentType, dataGenerator.getUserEquipmentType());
+		parsedMsg = parse(parsedMsg, DATA_TenentType, dataGenerator.getTenentType());
+		parsedMsg = parse(parsedMsg, DATA_RequiredSliceType, dataGenerator.getRequiredSliceType());
+		parsedMsg = parse(parsedMsg, DATA_RequiredStartDate, dataGenerator.getRequiredStartDate());
+		parsedMsg = parse(parsedMsg, DATA_RequiredEndDate, dataGenerator.getRequiredEndDate());
+
+		parsedMsg = parse(parsedMsg, DATA_RequiredStartTime, dataGenerator.getRequiredStartTime());
+		parsedMsg = parse(parsedMsg, DATA_RequiredEndTime, dataGenerator.getRequiredEndTime());
+		parsedMsg = parse(parsedMsg, DATA_RequiredPerformanceLevel, dataGenerator.getRequiredPerformanceLevel());
+		parsedMsg = parse(parsedMsg, DATA_RequiredReliabilityLevel, dataGenerator.getRequiredReliabilityLevel());
+		parsedMsg = parse(parsedMsg, DATA_RequiredBandwidth, dataGenerator.getRequiredBandwidth());
 		
-		int ranIndex = getIndex();
-		parsedMsg = parse(parsedMsg, DATA_RAN_NUMBER, dataGenerator.getRanNumber(ranIndex));
-		parsedMsg = parse(parsedMsg, DATA_CELL_NUMBER, dataGenerator.getCellNumber(ranIndex));
-		parsedMsg = parse(parsedMsg, DATA_CELL_CAPACITY, dataGenerator.getCellCapacity(ranIndex));
-		
-		parsedMsg = parse(parsedMsg, DATA_DATA_VOLUME, dataGenerator.getDataVolume());
-		parsedMsg = parse(parsedMsg, DATA_PEE_MEASUREMENT, dataGenerator.getPeeMeasurement());
-		parsedMsg = parse(parsedMsg, DATA_UTILIZATION, dataGenerator.getUtilization());
-		parsedMsg = parse(parsedMsg, DATA_PACKET_DELAY, dataGenerator.getPacketDelay());
-		parsedMsg = parse(parsedMsg, DATA_RAN_INITIATED_PAGING, dataGenerator.getRanInitiatedPaging());
-		
-		String numberOfCallsReceived = dataGenerator.getNumberOfCallsReceived();
-		
-		parsedMsg = parse(parsedMsg, DATA_NO_OF_CALLS_RECEIVED, numberOfCallsReceived);
-		
-		parsedMsg = parse(parsedMsg, DATA_SUCCESSFUL_CALLS, dataGenerator.getSuccessfulCalls(numberOfCallsReceived));
-		
-		parsedMsg = parse(parsedMsg, DATA_NETWORK_SLICE_SELECTION, dataGenerator.getNetworkSliceSelection());
-		parsedMsg = parse(parsedMsg, DATA_ENERGY_SAVING_STATE, dataGenerator.getEnergySavingState());
-		parsedMsg = parse(parsedMsg, DATA_ENERGY_SAVING_RECOMMENDATION_RESPONSE, dataGenerator.getEnergySavingRecommendationResponse());
-		parsedMsg = parse(parsedMsg, DATA_ENERGY_SAVING_RECOMMENDATION_INCENTIVE, dataGenerator.getEnergySavingRecommendationIncentive());
-		parsedMsg = parse(parsedMsg, DATA_ENERGY_SAVING_RECOMMENDATION, dataGenerator.getEnergySavingRecommendation());
-		parsedMsg = parse(parsedMsg, DATA_TIME_INTERVEL, dataGenerator.getTimeInterval());
-		
+
 		logger.debug("ParseAll getTime:{}",getTime());
 		logger.debug("ParseAll getUniqID:{}",getUniqID());
 		logger.debug("ParseAll getSecret:{}",getSecret());
@@ -330,7 +341,7 @@ public class IDSDataAppSample extends CommonBase {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(IDSDataAppSample.class, args);
+		SpringApplication.run(IDSDataAppRanSlice.class, args);
 	}
 
 }

@@ -72,7 +72,7 @@ dependencies {
 
 group = "ashok.ids.dataapps"
 version = "0.0.1-SNAPSHOT"
-description = "IDS Data-Apps Sample"
+description = "IDS Data-Apps ran-slice"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 publishing {
