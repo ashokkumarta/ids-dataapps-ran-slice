@@ -2,6 +2,7 @@ package ashok.ids.dataapps.ranslice;
 
 import java.util.Calendar;
 import java.util.List;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,7 @@ import ashok.ids.dataapps.common.CommonBase;
 public class IDSDataGen extends CommonBase {
 
 	@Value("${data.CustomerId}")
-	private String CustomerId;
+	private List<String> CustomerId;
 
 	@Value("${data.AccountNumber}")
 	private String AccountNumber;
@@ -21,7 +22,7 @@ public class IDSDataGen extends CommonBase {
 	private String SubscriberId;
 
 	@Value("${data.CustomerType}")
-	private String CustomerType;
+	private List<String> CustomerType;
 
 	@Value("${data.UserEquipmentIdPrefix}")
 	private String UserEquipmentIdPrefix;
@@ -30,25 +31,34 @@ public class IDSDataGen extends CommonBase {
 	private String UserEquipmentId;
 
 	@Value("${data.UserEquipmentType}")
-	private String UserEquipmentType;
+	private List<String> UserEquipmentType;
 	
 	@Value("${data.TenentType}")
-	private String TenentType;
+	private List<String> TenentType;
 
 	@Value("${data.RequiredSliceType}")
 	private List<String> RequiredSliceType;
-	
-	@Value("${data.RequiredStartDate}")
-	private String RequiredStartDate;
 
-	@Value("${data.RequiredEndDate}")
-	private String RequiredEndDate;
+	@Value("${data.RequiredStartInDays}")
+	private String RequiredStartInDays;
 
-	@Value("${data.RequiredStartTime}")
-	private String RequiredStartTime;
+	@Value("${data.RequiredDurationType}")
+	private List<String> RequiredDurationType;
 
-	@Value("${data.RequiredEndTime}")
-	private String RequiredEndTime;
+	@Value("${data.RequiredDuration}")
+	private String RequiredDuration;
+
+	@Value("${data.RequiredStartTimeHrs}")
+	private String RequiredStartTimeHrs;
+
+	@Value("${data.RequiredStartTimeMins}")
+	private String RequiredStartTimeMins;
+
+	@Value("${data.RequiredEndTimeHrs}")
+	private String RequiredEndTimeHrs;
+
+	@Value("${data.RequiredEndTimeMins}")
+	private String RequiredEndTimeMins;
 
 	@Value("${data.RequiredPerformanceLevel}")
 	private List<String> RequiredPerformanceLevel;
@@ -74,8 +84,8 @@ public class IDSDataGen extends CommonBase {
 	@Value("${data.Cost}")
 	private String Cost;
 
-	public String getCustomerId() {
-		return CustomerId;
+	public String getCustomerId() {		
+		return CustomerId.get(getIndex() % CustomerId.size());
 	}
 	
 	public String getAccountNumber() {
@@ -87,7 +97,7 @@ public class IDSDataGen extends CommonBase {
 	}
 
 	public String getCustomerType() {
-		return CustomerType;
+		return CustomerType.get(getIndex() % CustomerType.size());
 	}
 
 	public String getUserEquipmentId() {
@@ -95,31 +105,78 @@ public class IDSDataGen extends CommonBase {
 	}
 	
 	public String getUserEquipmentType() {
-		return UserEquipmentType;
+		return UserEquipmentType.get(getIndex() % UserEquipmentType.size());
 	}
 	
 	public String getTenentType() {
-		return TenentType;
+		return TenentType.get(getIndex() % TenentType.size());
 	}
 
 	public String getRequiredSliceType() {
 		return RequiredSliceType.get(getIndex() % RequiredSliceType.size());
 	}
 
-	public String getRequiredStartDate() {
-		return RequiredStartDate;
+	private Long getRequiredStartInDays() {
+		return Long.parseLong(getIndexInRange(RequiredStartInDays));
 	}
 
-	public String getRequiredEndDate() {
-		return RequiredEndDate;
+	private String getRequiredDurationType() {
+		return RequiredDurationType.get(getIndex() % RequiredDurationType.size());
+	}
+
+	private String getRequiredDuration() {
+		return getIndexInRange(RequiredDuration);
+	}
+
+	private String timeFormat(String data) {
+		int idata = Integer.parseInt(data);
+		if (idata < 10) {
+			return "0"+data;
+		}
+		return data;
+	} 
+
+	private String getRequiredStartTimeHrs() {
+		return timeFormat(getIndexInRange(RequiredStartTimeHrs));
+	}
+
+	private String getRequiredStartTimeMins() {
+		return timeFormat(getIndexInRange(RequiredStartTimeMins));
+	}
+
+	private String getRequiredEndTimeHrs() {
+		return timeFormat(getIndexInRange(RequiredEndTimeHrs));
+	}
+
+	private String getRequiredEndTimeMins() {
+		return timeFormat(getIndexInRange(RequiredEndTimeMins));
+	}
+
+	public LocalDateTime getRequiredStartDate() {
+		return LocalDateTime.now().plusDays(getRequiredStartInDays());
+	}
+
+	public LocalDateTime getRequiredEndDate(LocalDateTime startDate) {
+
+		LocalDateTime endDate = startDate.plusDays(1);
+		String durationType = getRequiredDurationType();
+		String duration = getRequiredDuration();
+		logger.debug("durationType: {}", durationType);
+		logger.debug("duration: {}", duration);
+		if("hours".equals(durationType)) {
+			endDate = endDate.plusHours(Long.parseLong(getRequiredDuration()));
+		} else {
+			endDate = endDate.plusDays(Long.parseLong(getRequiredDuration()));
+		}
+		return endDate;
 	}
 
 	public String getRequiredStartTime() {
-		return RequiredStartTime;
+		return getRequiredStartTimeHrs()+":"+getRequiredStartTimeMins();
 	}
 
 	public String getRequiredEndTime() {
-		return RequiredEndTime;
+		return getRequiredEndTimeHrs()+":"+getRequiredEndTimeHrs();
 	}
 
 	public String getRequiredPerformanceLevel() {

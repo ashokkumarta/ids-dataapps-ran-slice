@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -140,6 +142,8 @@ public class IDSDataAppRanSlice extends CommonBase {
 	
 	private static Map<String, String> _CONSUMER_STORE = new HashMap<>();
 	
+	private DateTimeFormatter stdDateFormat = DateTimeFormatter.ofPattern("dd-MMM-yyyy");  
+
 	@Autowired
 	private IDSDataAudit auditor;
 
@@ -225,12 +229,25 @@ public class IDSDataAppRanSlice extends CommonBase {
 
 		logger.debug("Processing...");
 		JSONObject inputJson = new JSONObject(input);
+		JSONObject responseJson = new JSONObject();
 
-		inputJson.put(AllotmentConfirmation, dataGenerator.getAllotmentConfirmation());
-		inputJson.put(TrackingAreaId, dataGenerator.getTrackingAreaId());
-		inputJson.put(CellNumber, dataGenerator.getCellNumber());
-		inputJson.put(RRMPolicyType, dataGenerator.getRRMPolicyType());
-		inputJson.put(Cost, dataGenerator.getCost());
+		String allotmentConfirmation = dataGenerator.getAllotmentConfirmation();
+		responseJson.put(AllotmentConfirmation, allotmentConfirmation);
+
+		if ("Yes".equals(allotmentConfirmation)) {
+			responseJson.put(TrackingAreaId, dataGenerator.getTrackingAreaId());
+			responseJson.put(CellNumber, dataGenerator.getCellNumber());
+			responseJson.put(RRMPolicyType, dataGenerator.getRRMPolicyType());
+			responseJson.put(Cost, dataGenerator.getCost());
+		}
+
+		try {
+			inputJson.getJSONArray("ids:contentPart")
+				.getJSONObject(0)
+				.put("tmf_content_isp_response", responseJson);
+		} catch(JSONException ex) {
+			inputJson.put("tmf_content_isp_response", responseJson);
+		}
 
 		ResponseEntity<String> response = ok(inputJson.toString());
 		logger.debug("Completed processing.");
@@ -280,8 +297,10 @@ public class IDSDataAppRanSlice extends CommonBase {
 		parsedMsg = parse(parsedMsg, DATA_UserEquipmentType, dataGenerator.getUserEquipmentType());
 		parsedMsg = parse(parsedMsg, DATA_TenentType, dataGenerator.getTenentType());
 		parsedMsg = parse(parsedMsg, DATA_RequiredSliceType, dataGenerator.getRequiredSliceType());
-		parsedMsg = parse(parsedMsg, DATA_RequiredStartDate, dataGenerator.getRequiredStartDate());
-		parsedMsg = parse(parsedMsg, DATA_RequiredEndDate, dataGenerator.getRequiredEndDate());
+
+		LocalDateTime startDate = dataGenerator.getRequiredStartDate();
+		parsedMsg = parse(parsedMsg, DATA_RequiredStartDate, stdDateFormat.format(startDate));
+		parsedMsg = parse(parsedMsg, DATA_RequiredEndDate, stdDateFormat.format(dataGenerator.getRequiredEndDate(startDate)));
 
 		parsedMsg = parse(parsedMsg, DATA_RequiredStartTime, dataGenerator.getRequiredStartTime());
 		parsedMsg = parse(parsedMsg, DATA_RequiredEndTime, dataGenerator.getRequiredEndTime());
