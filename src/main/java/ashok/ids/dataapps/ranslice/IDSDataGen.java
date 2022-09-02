@@ -84,6 +84,12 @@ public class IDSDataGen extends CommonBase {
 	@Value("${data.Cost}")
 	private String Cost;
 
+	@Value("${data.SliceAllocationStatus}")
+	private List<String> SliceAllocationStatus;
+
+	@Value("${data.SliceAllocationId}")
+	private String SliceAllocationId;
+
 	public String getCustomerId() {		
 		return CustomerId.get(getIndex() % CustomerId.size());
 	}
@@ -211,4 +217,11 @@ public class IDSDataGen extends CommonBase {
 		return "$" + getIndexInRange(Cost);
 	}
 
+	public String getSliceAllocationStatus() {
+		return SliceAllocationStatus.get(getIndex() % SliceAllocationStatus.size());
+	}
+
+	public String getSliceAllocationId() {
+		return "SLICE#" + getIndexInRange(SliceAllocationId);
+	}
 }

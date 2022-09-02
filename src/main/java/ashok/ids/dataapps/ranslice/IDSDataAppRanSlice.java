@@ -96,7 +96,15 @@ public class IDSDataAppRanSlice extends CommonBase {
 
 	@Value("${label.Cost}")
 	private String Cost;
-	
+
+	@Value("${label.SliceAllocationId}")
+	private String SliceAllocationId;
+	@Value("${label.SliceAllocationTimestamp}")
+	private String SliceAllocationTimestamp;
+	@Value("${label.SliceAllocationStatus}")
+	private String SliceAllocationStatus;
+
+
 	private static final String APP_NAME = "\\$app.name";
 	private static final String APP_TYPE = "\\$app.type";
 
@@ -232,13 +240,18 @@ public class IDSDataAppRanSlice extends CommonBase {
 		JSONObject responseJson = new JSONObject();
 
 		String allotmentConfirmation = dataGenerator.getAllotmentConfirmation();
-		responseJson.put(AllotmentConfirmation, allotmentConfirmation);
 
-		if ("Yes".equals(allotmentConfirmation)) {
+		if ("Yes".equals(allotmentConfirmation) || "CSP - RAN SLICING - ALLOCATION - IDS Data App".equals(appName)) {
+			responseJson.put(AllotmentConfirmation, "Yes");
 			responseJson.put(TrackingAreaId, dataGenerator.getTrackingAreaId());
 			responseJson.put(CellNumber, dataGenerator.getCellNumber());
 			responseJson.put(RRMPolicyType, dataGenerator.getRRMPolicyType());
 			responseJson.put(Cost, dataGenerator.getCost());
+			if("CSP - RAN SLICING - ALLOCATION - IDS Data App".equals(appName)) {
+				responseJson.put(SliceAllocationId, dataGenerator.getSliceAllocationId());
+				responseJson.put(SliceAllocationTimestamp, getTime());
+				responseJson.put(SliceAllocationStatus, dataGenerator.getSliceAllocationStatus());
+			}
 		}
 
 		try {
