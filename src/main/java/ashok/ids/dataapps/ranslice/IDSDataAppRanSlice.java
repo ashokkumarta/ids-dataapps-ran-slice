@@ -172,11 +172,11 @@ public class IDSDataAppRanSlice extends CommonBase {
 		}
 
 		String path = request.getRequestURI();
-		logger.info("Processing the request for: {}", path);
+		logger.info("{} - Processing the request for: {}", appName, path);
 		
 		String msgResponse = parseAll(msgProvider);
 		if(msgProviderAudit) {
-			logger.info("Audit enabled");
+			logger.info("{} - Audit enabled", appName);
 			try {
 				auditor.audit(parseAll(msgProviderAuditMsg));
 			} catch (IOException e) {
@@ -185,7 +185,7 @@ public class IDSDataAppRanSlice extends CommonBase {
 		}
 
 		reset();
-		logger.info("Successful completion of request for: {}", path);
+		logger.info("{} - Successful completion of request for: {}", appName, path);
 		return ok(msgResponse);
 	}
 
@@ -198,10 +198,9 @@ public class IDSDataAppRanSlice extends CommonBase {
 		}
 
 		String path = request.getRequestURI();
-
-		logger.debug("Received request for: {}", path);
-		logger.debug("With parameters: {}", params);
-		logger.debug("With message: {}", input);
+		logger.info("{} - Processing the request for: {}", appName, path);
+		logger.info("{} - With parameters: {}", appName, params);
+		logger.info("{} - With message: {}", appName, input);
 
 		String uniqId = getUniqID();
 		_CONSUMER_STORE.put(uniqId, input);
@@ -215,7 +214,7 @@ public class IDSDataAppRanSlice extends CommonBase {
 		logger.debug("Creating response");
 		response = ok(parsedMsg, input);
 
-		logger.debug("Completed processing.");
+		logger.info("{} - Completed processing.", appName);
 		logger.debug("Response: {}", response);
 		reset();
 		return response;
@@ -230,10 +229,9 @@ public class IDSDataAppRanSlice extends CommonBase {
 		}
 
 		String path = request.getRequestURI();
-
-		logger.debug("Received request for: {}", path);
-		logger.debug("With parameters: {}", params);
-		logger.debug("With message: {}", input);
+		logger.info("{} - Processing the request for: {}", appName, path);
+		logger.info("{} - With parameters: {}", appName, params);
+		logger.info("{} - With message: {}", appName, input);
 
 		logger.debug("Processing...");
 		JSONObject inputJson = new JSONObject(input);
@@ -263,7 +261,7 @@ public class IDSDataAppRanSlice extends CommonBase {
 		}
 
 		ResponseEntity<String> response = ok(inputJson.toString());
-		logger.debug("Completed processing.");
+		logger.info("{} - Completed processing.", appName);
 
 		logger.debug("Response: {}", response);
 		reset();
