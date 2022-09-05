@@ -238,6 +238,7 @@ public class IDSDataAppRanSlice extends CommonBase {
 		JSONObject responseJson = new JSONObject();
 
 		String allotmentConfirmation = dataGenerator.getAllotmentConfirmation();
+		responseJson.put(AllotmentConfirmation, "No");
 
 		if ("Yes".equals(allotmentConfirmation) || "CSP - RAN SLICING - ALLOCATION - IDS Data App".equals(appName)) {
 			responseJson.put(AllotmentConfirmation, "Yes");
@@ -250,8 +251,6 @@ public class IDSDataAppRanSlice extends CommonBase {
 				responseJson.put(SliceAllocationTimestamp, getTime());
 				responseJson.put(SliceAllocationStatus, dataGenerator.getSliceAllocationStatus());
 			}
-		} else {
-			responseJson.put(AllotmentConfirmation, "No");
 		}
 			
 		try {
