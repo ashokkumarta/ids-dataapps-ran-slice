@@ -247,18 +247,20 @@ public class IDSDataAppRanSlice extends CommonBase {
 			responseJson.put(RRMPolicyType, dataGenerator.getRRMPolicyType());
 			responseJson.put(Cost, dataGenerator.getCost());
 			if("CSP - RAN SLICING - ALLOCATION - IDS Data App".equals(appName)) {
-				responseJson.put(SliceAllocationId, dataGenerator.getSliceAllocationId());
-				responseJson.put(SliceAllocationTimestamp, getTime());
-				responseJson.put(SliceAllocationStatus, dataGenerator.getSliceAllocationStatus());
+				JSONObject allocationStatus = new JSONObject();
+				allocationStatus.put(SliceAllocationId, dataGenerator.getSliceAllocationId());
+				allocationStatus.put(SliceAllocationTimestamp, getTime());
+				allocationStatus.put(SliceAllocationStatus, dataGenerator.getSliceAllocationStatus());
+				responseJson.put("Allocation Status", allocationStatus);
 			}
 		}
 			
 		try {
 			inputJson.getJSONArray("ids:contentPart")
 				.getJSONObject(0)
-				.put("tmf_content_isp_response", responseJson);
+				.put("Allotment Details", responseJson);
 		} catch(JSONException ex) {
-			inputJson.put("tmf_content_isp_response", responseJson);
+			inputJson.put("Allotment Details", responseJson);
 		}
 
 		ResponseEntity<String> response = ok(inputJson.toString());
