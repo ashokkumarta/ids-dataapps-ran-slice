@@ -250,8 +250,10 @@ public class IDSDataAppRanSlice extends CommonBase {
 				responseJson.put(SliceAllocationTimestamp, getTime());
 				responseJson.put(SliceAllocationStatus, dataGenerator.getSliceAllocationStatus());
 			}
+		} else {
+			responseJson.put(AllotmentConfirmation, "No");
 		}
-
+			
 		try {
 			inputJson.getJSONArray("ids:contentPart")
 				.getJSONObject(0)
